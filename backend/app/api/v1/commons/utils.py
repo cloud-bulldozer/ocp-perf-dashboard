@@ -119,26 +119,6 @@ def buildAggregateQuery(constant_dict):
     return aggregate
 
 
-def removeKeys(filterDict, keys_to_remove):
-    for key in keys_to_remove:
-        if key in filterDict:
-            del filterDict[key]
-    return filterDict
-
-
-def buildPlatformFilter(upstreamList, clusterypeList):
-    filterOptions = []
-    upstreamCheck = any("rosa-hcp" in s.lower() for s in upstreamList)
-    clusterTypeCheck = any("rosa" in s.lower() for s in clusterypeList)
-
-    if upstreamCheck:
-        filterOptions.append("AWS ROSA-HCP")
-    if clusterTypeCheck:
-        filterOptions.append("AWS ROSA")
-
-    return filterOptions
-
-
 def buildReleaseStreamFilter(input_array):
     mapped_array = []
     for item in input_array:
@@ -152,9 +132,4 @@ def buildReleaseStreamFilter(input_array):
             "Stable",
         )
         mapped_array.append(match)
-    return mapped_array
-
-
-def getBuildFilter(input_list):
-    result = ["-".join(item.split("-")[-4:]) for item in input_list]
-    return result
+    return list(set(mapped_array))
